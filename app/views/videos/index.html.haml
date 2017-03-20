@@ -1,0 +1,12 @@
+#videos
+  - @videos.each do |video|
+    = render video
+  .clear
+= form_for Video.new do |f|
+  = f.label :file
+  = f.file_field :file, multiple: true, name: 'video[file]'
+%script#template-upload{:type => "text/x-tmp"}
+  <div class="upload">
+  {%=o.name%}
+  <div class="progress"><div class="bar"></div></div>
+  </div>

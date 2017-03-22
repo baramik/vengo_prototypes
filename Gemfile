@@ -25,10 +25,12 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'haml'
 gem 'bootstrap-sass', '~> 3.3.6'
+gem 'font-awesome-sass'
 
 gem 'aws-sdk'
 gem 'fog-aws'
 gem 'carrierwave'
+gem 'carrierwave-base64'
 gem 'jquery-fileupload-rails'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

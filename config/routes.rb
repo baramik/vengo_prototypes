@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   root 'videos#index'
   resources :videos
+  resources :photos, except: [:show, :edit, :update]
   get 'transcoder/jobs/:id' => 'videos#jobs'
   get 'transcoder/execute' => 'videos#execute'
   

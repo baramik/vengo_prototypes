@@ -12,7 +12,10 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
+//= require bootstrap-sprockets
 //= require jquery-fileupload/basic
 //= require jquery-fileupload/vendor/tmpl
 //= require videos
+//= require cropper
+//= require tooltip.min
+//= require photos

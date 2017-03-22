@@ -1,0 +1,5 @@
+.photo
+  = image_tag photo.file_url, size: '250x250'
+  .name= photo.name
+  .actions
+    = link_to "remove", photo, :confirm => 'Are you sure?', :method => :delete

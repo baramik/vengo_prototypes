@@ -2,6 +2,6 @@
   = video_tag video.file_url, controls: true, autobuffer: true, size: '300'
   .name= video.default_name
   .actions
-    = link_to "edit", edit_video_path(video)
+    = link_to "edit", edit_video_path(video), class: 'btn btn-link'
     |
-    = link_to "remove", video, :confirm => 'Are you sure?', :method => :delete
+    = link_to "remove", video, :confirm => 'Are you sure?', :method => :delete, class: 'btn btn-link'

@@ -9,27 +9,29 @@ module ElasticTranscoder
   class TranscodeVideo
     require 'aws-sdk'
     def initialize
-      @elastictranscoder = Aws::ElasticTranscoder::Client.new(region: 'us-west-2')
+      @elastictranscoder = Aws::ElasticTranscoder::Client.new(region: ENV['AWS_REGION'])
+      @s3 = Aws::S3::Client.new(region: ENV['AWS_REGION']) 
       @pipeline_id = '1489976071840-hwa5xd'
     end
 
-    def create_job(preset_id, input_file, output_file)
-      @elastictranscoder.create_job(
-        pipeline_id: @pipeline_id,
-        input: {
-          key: input_file,
-        },
-        outputs: [
-          {
-            key: output_file,
-            thumbnail_pattern: "thumb-{count}-{resolution}", #thumbnail generation based on pattern
-            preset_id: preset_id
-          }
-        ]
-      )
+    # time_span: {start_time: '00:00:00.000', duration: '00:00:15.000' }
+    def create_job(key_input, preset_id, start_time, duration)
+      preset = list_presets.find {|s| s.id == preset_id } 
+      key_output = key_input.split('.').first + SecureRandom.hex(13) + '.' + preset.container
+      input_params = { key: key_input, frame_rate: 'auto', resolution: 'auto', aspect_ratio: 'auto', interlaced: 'auto', container: 'auto'}
+       
+      if  start_time != '00:00:00.000' || duration != 'auto'
+        input_params[:time_span] = {}
+        input_params[:time_span].merge!({start_time: start_time}) unless start_time == '00:00:00.000' 
+        input_params[:time_span].merge!({duration: duration}) unless duration == 'auto'
+      end   
+      job = @elastictranscoder.create_job( pipeline_id: @pipeline_id,
+        input: input_params,
+        output: { key: key_output, preset_id: preset_id, thumbnail_pattern: "", rotate: '0'} )
+      return job, key_output
     end
 
-    def list_jobs id
+    def list_jobs(id)
       begin 
         @elastictranscoder.list_jobs_by_pipeline(pipeline_id: id)[:jobs]
       rescue
@@ -43,6 +45,14 @@ module ElasticTranscoder
       rescue
         #Raise informative exception
       end
+    end
+    
+    def read_job(job_id)
+      job = @elastictranscoder.read_job({id: job_id}).job
+      if job.status == "Complete"
+        @s3.put_object_acl({acl: "public-read",  key: job.output.key, bucket: ENV['S3_BUCKET_NAME'] }) 
+      end
+      job
     end
   end
 end

@@ -1,0 +1,27 @@
+.container
+  .row
+    .col-md-6
+      = render @video  
+    .col-md-6
+      %h1 Preview File
+      #transcoder-status.alert.alert-success
+      = video_tag @video.preview_file_url, controls: true, autobuffer: true, size: '300', class: '#preview_file_video'
+      = form_tag transcoder_execute_path, remote: true do
+        .form-group
+          = hidden_field_tag :key_input, @video.file.file.attributes[:key]
+          = hidden_field_tag :id, @video.id
+        .form-group
+          = label_tag 'Format'
+          = select_tag :presets, options_from_collection_for_select(@presets, 'id', 'name'), class: 'form-control'
+        .form-group
+          = label_tag 'Start time ("00:00:00.000") format '
+          = text_field_tag :start_time, '00:00:00.000', class: 'form-control'
+        .form-group
+          = label_tag 'Duration ("00:00:00.000" or "auto") format'
+          = text_field_tag :duration,  'auto', class: 'form-control'
+            
+        .form-group
+          = submit_tag "Show Preview", class: 'btn btn-primary'
+       
+      = form_for @video, method: :put do
+        = submit_tag "Save", class: 'btn btn-primary'

@@ -2,8 +2,8 @@ Rails.application.routes.draw do
   root 'videos#index'
   resources :videos
   resources :photos, except: [:show, :edit, :update]
-  get 'transcoder/jobs/:id' => 'videos#jobs'
-  get 'transcoder/execute' => 'videos#execute'
+  get 'transcoder/job' => 'videos#job_transcoder'
+  post 'transcoder/execute' => 'videos#execute_transcoder'
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

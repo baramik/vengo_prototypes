@@ -1,0 +1,31 @@
+#LoginWithAmazon
+:javascript
+  // track script start
+  trackAmazonPayments = function(ClientId){
+    console.log(ClientId);
+    url = "https://vengo-alekseyg1985.c9users.io/track_amazon_payments"
+    $.ajax({ type: "POST", url: url, dataType: "json", data: {clientId: ClientId}});
+  }
+  
+  // track script end
+
+  window.onAmazonLoginReady = function() { 
+    amazon.Login.setClientId('AEIOU1234AEIOU'); 
+  };
+  window.onAmazonPaymentsReady = function(){
+    // render the button here
+    var authRequest; 
+    OffAmazonPayments.Button('LoginWithAmazon', 'YOUR-SELLER-ID', {
+      type:  "TYPE_PARAMETER", 
+      color: "COLOR_PARAMETER", 
+      size:  "SIZE_PARAMETER", 
+      language: "ENTER_LANGUAGE_PARAMETER",
+
+      authorization: function() { 
+        loginOptions = {scope: "SCOPES", popup: "POPUP_PARAMETER"}; 
+        authRequest = amazon.Login.authorize (loginOptions, "REDIRECT_URL"); 
+        trackAmazonPayments('AEIOU1234AEIOU');
+      } 
+    });
+  }
+%script{:async => "async", :src => "https://static-eu.payments-amazon.com/OffAmazonPayments/gbp/sandbox/lpa/js/Widgets.js", :type => "text/javascript"}

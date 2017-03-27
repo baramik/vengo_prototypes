@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :photos, except: [:show, :edit, :update]
   get 'transcoder/job' => 'videos#job_transcoder'
   post 'transcoder/execute' => 'videos#execute_transcoder'
+  post 'track_amazon_payments' => 'amazon_payment#track'
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
